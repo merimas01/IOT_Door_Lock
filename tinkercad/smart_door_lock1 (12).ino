@@ -7,27 +7,25 @@
 const int Password_Length=5;
 
 Servo myservo;
-LiquidCrystal lcd(A0, A1, A2, A3, A4, A5);
+LiquidCrystal lcd(A0, A1, A2, A3, A4, A5); //pinovi na arduinu za lcd
 
-int pos = 0;
+int pozicija = 0;
 
-char Data[15]; //neka korisnik kuca koliko hoce znakova
-char Master[Password_Length] = "1234";
-int data_count = 0, master_count = 0;
+char Unos[15]; //neka korisnik kuca koliko hoce znakova
+char IspravanPass[Password_Length] = "1234";
+int unos_brojac = 0, ispravanpass_brojac = 0;
 
-bool door = false;
+bool otvorena_vrata = false;
 
 
 bool obrisanaSifra=false;
 bool postavljenaNova=false;
-char kopijaMastera[Password_Length];
+char kopijaIspravneLozinke[Password_Length];
 char adminPass[5]="5555";
 char adminPassUnos[5];
 bool adminPassTacan=false;
 int brojac_admin=0;
 int brojac_admin_unos=0;
-
-/*---preparing keypad---*/
 
 const byte ROWS = 4;
 const byte COLS = 4;
@@ -44,15 +42,11 @@ byte colPins[COLS] = {4, 5, 6, 7};
 
 Keypad customKeypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
-
-bool nijePritisnutoSlovo=true;
-
-
 void setup()
 {
   pinMode(13,OUTPUT);
   myservo.attach(9);
-  myservo.write(0);
+  myservo.write(0); //pozicija
   lcd.begin(16, 2); 
 }
 
@@ -60,45 +54,45 @@ void setup()
 void loop()
 {
     /*
-  if (door == true)
+  if (vrata_otvorena == true)
   {
     customKey = customKeypad.getKey();
-    if (customKey == 'A')  //kucajuci ovo slovo zatvaramo vrata
+    if (customKey == 'A') //klikom na A zatvaramo vrata
     {
       lcd.clear();
-      ServoClose();
-      lcd.print("Door is closed");
+      SpustiRampu ();
+      lcd.print("Vrata zatvorena");
       //delay(3000);
-      door = false;
+      vrata_otvorena = false;
       lcd.begin(16,2);
     }
   }
   else
-    Open();
+    OtvoriVrata();
   */
   
-  if(door==false) Open();
+  if(otvorena_vrata==false) OtvoriVrata ();
 }
 
-void clearData()
+void obrisiUnos()
 {
-  while (data_count != 0)
+  while (unos_brojac != 0)
   { 
-    Data[data_count--] = 0;
+    Unos[unos_brojac--] = 0;
   }
   return;
 }
 
-void clearMaster()
+void obrisiIspravnuLozinku()
 {
-  while(master_count!=0)
+  while(ispravanpass_brojac!=0)
   {
-    Master[master_count--] = 0;
+    IspravanPass[ispravanpass_brojac --] = 0;
   }
   return;
 }
 
-void clearAdminUnos(){
+void obrisiAdminUnos(){
   while (brojac_admin_unos != 0)
   { 
     adminPassUnos[brojac_admin_unos--] = 0;
@@ -106,37 +100,37 @@ void clearAdminUnos(){
   return;
 }
 
-void ServoClose()
+void SpustiRampu()
 {
-  //pos=position=goes from 90 degrees to 0 degree
-  for (pos = 90; pos >= 0; pos -= 1) { 
-    myservo.write(pos);
+  //position=goes from 90 degrees to 0 degree
+  for (pozicija = 90; pozicija >= 0; pozicija -= 1) { 
+    myservo.write(pozicija);
   }
 }
 
-void ServoOpen()
+void PodigniRampu()
 {
-  for (pos = 0; pos <= 90; pos += 1) {
-    myservo.write(pos);  
+  for (pozicija = 0; pozicija <= 90; pozicija += 1) {
+    myservo.write(pozicija);  
   }
 }
 
 void kopirajSifru(){
     for (int i=0; i<Password_Length; i++)
-            kopijaMastera[i] = Master[i];
+            kopijaIspravneLozinke[i] = IspravanPass[i];
 }
 
 void vratiStaruSifru(){
     for (int i=0; i<Password_Length; i++)
-            Master[i] = kopijaMastera[i];
+            IspravanPass[i] = kopijaIspravneLozinke[i];
 }
 
 
-void Open()
+void OtvoriVrata ()
 {
  
   lcd.setCursor(0, 0);
-  lcd.print("Enter Pass");
+  lcd.print("Unesi Pass");
   
   char customKey = customKeypad.getKey();
   
@@ -154,22 +148,24 @@ void Open()
           brojac_admin_unos++;
          }
          else if(key=='D'){
-            if (strcmp(adminPassUnos, adminPass)==0)
-                adminPassTacan=true;
+           if (strcmp(adminPassUnos, adminPass)==0){
+             obrisiAdminUnos();
+             adminPassTacan=true;
+           }
             else{
                lcd.clear();
-               lcd.print(" Wrong Password ");
+               lcd.print("Neispravan unos! ");
                delay(1000);
-               clearAdminUnos();
+               obrisiAdminUnos();
                lcd.clear();
                lcd.print("Admin Pass:");
             }
          }
       else if(key=='C'){
         lcd.clear();
-        lcd.print("Enter Pass");
+        lcd.print("Upisi Pass");
         delay(1000);
-        clearAdminUnos();
+        obrisiAdminUnos();
         adminPassTacan=true; //samo da izadjemo iz petlje
         postavljenaNova=true; //da ne nastavi dalje
       }
@@ -177,35 +173,34 @@ void Open()
     
     
     kopirajSifru();
-    clearMaster();
+    obrisiIspravnuLozinku ();
     lcd.clear();
     lcd.setCursor(0,0);
     if(postavljenaNova==false)
-      lcd.print("Enter New Pass");
+      lcd.print("Upisi Novi Pass");
     while(postavljenaNova==false)
     {
      char key=customKeypad.getKey();
       
-      if(key>='0' && key<='9' && master_count<Password_Length-1){
-         Master[master_count] = key;
-         lcd.setCursor(master_count, 1);
+      if(key>='0' && key<='9' && ispravanpass_brojac <Password_Length-1){
+         IspravanPass[ispravanpass_brojac] = key;
+         lcd.setCursor(ispravanpass_brojac, 1);
          lcd.print('*'); 
-         master_count++;
+         ispravanpass_brojac ++;
       }
       else if(key=='D'){
         lcd.clear();
-        lcd.print("Enter Pass");
+        lcd.print("Upisi Pass");
         postavljenaNova=true;
       }
       else if(key=='C'){
-        clearData();
+        obrisiUnos();
         vratiStaruSifru();
          lcd.clear();
-        lcd.print("Enter Pass");
-        postavljenaNova=true; //da izadjemo iz petlje
+        lcd.print("Upisi Pass");
+        postavljenaNova=true;
       }
     }
-    clearAdminUnos();
     postavljenaNova=false;
     adminPassTacan=false;
   }
@@ -213,43 +208,46 @@ void Open()
             
           
   
-  if (customKey>='0' && customKey<='9' && data_count<14) //jer se moze samo 14 znakova upisati
+  if (customKey>='0' && customKey<='9')
   {
-    Data[data_count] = customKey;
-    lcd.setCursor(data_count, 1);
-    lcd.print('*'); //Data[data_count]
-    data_count++;
+    Unos[unos_brojac] = customKey;
+    lcd.setCursor(unos_brojac, 1);
+    lcd.print('*'); //Unos[unos_brojac]
+    unos_brojac++;
   }
 
-  else if (customKey=='D') //if (data_count == Password_Length - 1)
+  else if (customKey=='D') //if (unos_brojac == Password_Length - 1)
   {
-    if (strcmp(Data, Master)==0)  //vraca nula ako su oba stringa ista
+    if (strcmp(Unos, IspravanPass)==0)  //vraca nula ako su oba stringa ista
     {
       lcd.clear();
-      ServoOpen();
-      lcd.print(" Door is Open ");
-      door = true;
+      PodigniRampu();
+      lcd.print("Vrata otvorena.");
+      otvorena_vrata = true;
       digitalWrite(13,HIGH);
       delay(6000);
       
       //sljedece linije izbrisati ako zelim da manuelno zakljucam vrata
       //a u loop dijelu odkomentarisati veliki komentar sa dva if-a
       lcd.clear();
-      lcd.print(" Time is up! ");
-      delay(1000);
+      lcd.print("Isteklo vrijeme!");
+      delay(2000);
       digitalWrite(13,LOW);
-      ServoClose();
-      door = false;   
+      lcd.clear();
+      lcd.print("Vrata zatvorena.");
+      delay(1000);
+      SpustiRampu();
+      otvorena_vrata = false;   
     }
     else
     {
       lcd.clear();
-      lcd.print(" Wrong Password ");
-      door = false;
+      lcd.print("Neispravan unos! ");
+      otvorena_vrata = false;
     }
     delay(1000);
     lcd.clear();
-    clearData();
+    obrisiUnos();
   }
             
               
