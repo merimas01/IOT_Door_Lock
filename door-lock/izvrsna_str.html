@@ -96,7 +96,7 @@
             <h5>Unesite adminovu lozinku: </h5>
             <input type="password" id="unos_admin_pass">
             <br>
-            <h5>Unesite novu šifru (max 4 cifre)</h5>
+            <h5>Unesite novu šifru (4 cifre)</h5>
             <input type="password" id="unos_nove_sifre">
             <br>
             <button id="btn_potvrdi_unos_nove_sifre">POTVRDI UNOS</button>
@@ -149,7 +149,7 @@
         function PromijeniSifru(){
 
             if(unos_admin_pass.value==adminsifra && unos_nove_sifre.value!="" 
-            && unos_nove_sifre.value.length<5 && containsOnlyNumbers(unos_nove_sifre.value) )
+            && unos_nove_sifre.value.length==4 && containsOnlyNumbers(unos_nove_sifre.value) )
             {
                 console.log("Admin sifra: ",adminsifra);
                 console.log("Vrijednost nove sifre ",unos_nove_sifre.value);

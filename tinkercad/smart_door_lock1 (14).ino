@@ -27,6 +27,7 @@ bool adminPassTacan=false;
 int brojac_admin=0;
 int brojac_admin_unos=0;
 
+
 const byte ROWS = 4;
 const byte COLS = 4;
 char keys[ROWS][COLS] = {
@@ -169,15 +170,22 @@ void OtvoriVrata ()
         adminPassTacan=true; //samo da izadjemo iz petlje
         postavljenaNova=true; //da ne nastavi dalje
       }
+       else if(key=='*'){  //za brisanje unosa ako smo pogrijesili
+        obrisiAdminUnos();
+        brojac_admin_unos=0;
+        lcd.clear();
+        lcd.print("Admin Pass:");        
+      }
     }
     
     
     kopirajSifru();
-    obrisiIspravnuLozinku ();
+    obrisiIspravnuLozinku();
     lcd.clear();
     lcd.setCursor(0,0);
-    if(postavljenaNova==false)
+    if(postavljenaNova==false){
       lcd.print("Upisi Novi Pass");
+    }
     while(postavljenaNova==false)
     {
      char key=customKeypad.getKey();
@@ -188,10 +196,18 @@ void OtvoriVrata ()
          lcd.print('*'); 
          ispravanpass_brojac ++;
       }
-      else if(key=='D'){
+      else if(key=='D' && ispravanpass_brojac==4){
         lcd.clear();
+       // obrisiUnos(); //.....
         lcd.print("Upisi Pass");
         postavljenaNova=true;
+      }
+      else if(key=='D' && ispravanpass_brojac!=4){
+        lcd.setCursor(0,0);
+        lcd.print("Ukucaj 4 broja! ");
+        delay(2000);
+        lcd.setCursor(0,0);
+        lcd.print("Upisi Novi Pass");
       }
       else if(key=='C'){
         obrisiUnos();
@@ -199,6 +215,12 @@ void OtvoriVrata ()
          lcd.clear();
         lcd.print("Upisi Pass");
         postavljenaNova=true;
+      }
+      else if(key=='*'){  //za brisanje unosa ako smo pogrijesili
+        obrisiIspravnuLozinku();
+        ispravanpass_brojac=0;
+        lcd.clear();
+        lcd.print("Upisi Novi Pass");        
       }
     }
     postavljenaNova=false;
@@ -216,10 +238,19 @@ void OtvoriVrata ()
     unos_brojac++;
   }
 
+  else if(customKey=='*'){  //za brisanje unosa ako smo pogrijesili
+        obrisiUnos();
+        unos_brojac=0;
+        lcd.clear();
+        lcd.print("Upisi Pass");        
+  }
+  
   else if (customKey=='D') //if (unos_brojac == Password_Length - 1)
   {
     if (strcmp(Unos, IspravanPass)==0)  //vraca nula ako su oba stringa ista
     {
+      Serial.print(sizeof(Unos)/sizeof(Unos[0]));
+      Serial.print(sizeof(IspravanPass)/sizeof(IspravanPass[0]));
       lcd.clear();
       PodigniRampu();
       lcd.print("Vrata otvorena.");
