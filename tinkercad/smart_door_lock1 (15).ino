@@ -139,6 +139,7 @@ void OtvoriVrata ()
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Admin Pass:");
+    obrisiUnos();
     while(adminPassTacan==false)
     {
        char key=customKeypad.getKey();
@@ -210,7 +211,7 @@ void OtvoriVrata ()
         lcd.print("Upisi Novi Pass");
       }
       else if(key=='C'){
-        obrisiUnos();
+       // obrisiUnos();
         vratiStaruSifru();
          lcd.clear();
         lcd.print("Upisi Pass");
@@ -274,6 +275,7 @@ void OtvoriVrata ()
     {
       lcd.clear();
       lcd.print("Neispravan unos! ");
+     // obrisiUnos(); //dodano
       otvorena_vrata = false;
     }
     delay(1000);
