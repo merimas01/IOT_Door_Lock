@@ -264,11 +264,8 @@
          
         }
 
-
-
-        let conuter=0;
        
-
+/*
        function displaySecondes() {
        document.getElementById("odbrojavanje").innerHTML = counter++;
        }
@@ -288,6 +285,8 @@
             
         }
 
+        */
+
         function setVrataOtkljucanaFalse(){
             update(ref(db,'otkljucavanje'),{
                 vrata_otkljucana:false
@@ -296,10 +295,11 @@
 
 
 
+        var counter = 8;  //za odbrojavanje sekundi
      
 
-        //var tt=setInterval(function(){startTime()},1000);
-   var counter = 8;
+    //var tt=setInterval(function(){startTime()},1000);
+  
 /*
    function startTime()
    {
