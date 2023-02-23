@@ -206,7 +206,19 @@
                   if(data==true)
                   {
                     poruka_sifra_tacna.innerHTML="Vrata su otključana. Za 7 sekundi vrata će se zatvoriti.";
-                    var tt=setInterval(function(){startTime()},1000);
+                  //  var tt=setInterval(function(){startTime()},1000);
+                  var tt2=setInterval(()=>{
+                    if(counter == 0) {
+                        document.getElementById('odbrojavanje').innerHTML="";
+                        poruka_sifra_tacna.innerHTML="Vrijeme je isteklo. Vrata su zatvorena.";
+                        clearInterval(tt2);
+                        counter=8;
+                    } else {
+                        counter--;
+                        document.getElementById('odbrojavanje').innerHTML= counter;
+                    }
+                },1000);
+
                    // cekaj7sekundi();
                   // document.getElementById("odbrojavanje").innerHTML = '';
                    setVrataOtkljucanaFalse();
@@ -284,10 +296,11 @@
 
 
 
+     
 
         //var tt=setInterval(function(){startTime()},1000);
    var counter = 8;
-
+/*
    function startTime()
    {
         if(counter == 0) {
@@ -300,7 +313,7 @@
              document.getElementById('odbrojavanje').innerHTML= counter;
         }
     }
-
+*/
 
 
         btn_potvrdi_unos_nove_sifre.addEventListener('click', PromijeniSifru);
