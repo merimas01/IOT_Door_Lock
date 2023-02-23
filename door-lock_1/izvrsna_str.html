@@ -74,6 +74,7 @@
 </head>
 <body>
 
+
     <div class="sve">
 
         <div class="naslov">
@@ -161,15 +162,18 @@
                 sifra_vrata:unos_nove_sifre.value
                 })
 
+                //fail =false
                 update(ref(db,"failure/"),{
                 fail:false
                 })
+
             }
             else 
             {
                 update(ref(db,"failure/"),{
                 fail:true
-                })         
+                })
+           
             }
         }
 
@@ -195,48 +199,93 @@
 
             get(child(dbref,"otkljucavanje/"+'vrata_otkljucana'))
             .then((snapshot)=>{
-                if(snapshot.exists())
-                {
+                if(snapshot.exists()){
                   var data=snapshot.val();
                   console.log("Vrata otkljucana: ",data);
 
-                    if(data==true)
-                    {
-                        poruka_sifra_tacna.innerHTML="Vrata su otključana. Za 7 sekundi vrata će se zatvoriti.";
-            
-                        var tt2=setInterval(()=>{
-                            if(counter == 0) {
-                                document.getElementById('odbrojavanje').innerHTML="";
-                                poruka_sifra_tacna.innerHTML="Vrijeme je isteklo. Vrata su zatvorena.";
-                                clearInterval(tt2);
-                                counter=8;
-                            } else {
-                                counter--;
-                                document.getElementById('odbrojavanje').innerHTML= counter;
-                            }
-                        },1000);
-                        setVrataOtkljucanaFalse();
-                    }       
-                    else 
-                    {               
-                        poruka_sifra_tacna.innerHTML="Vrata su zaključana.";
-                        get(child(dbref,"vrata/"+"pogresna"))
-                        .then((snapshot)=>{                
-                            var data=snapshot.val();
-                            console.log("pogresna: ",data);
-                            if(data==true){
-                                poruka_sifra_tacna.innerHTML="Neispravan unos.";          
-                                update(ref(db,'vrata'),{ pogresna:false })                    
-                            }                               
-                        })
-                    }          
+                  if(data==true)
+                  {
+                    poruka_sifra_tacna.innerHTML="Vrata su otključana. Za 7 sekundi vrata će se zatvoriti.";
+                  //  var tt=setInterval(function(){startTime()},1000);
+                  var tt2=setInterval(()=>{
+                    if(counter == 0) {
+                        document.getElementById('odbrojavanje').innerHTML="";
+                        poruka_sifra_tacna.innerHTML="Vrijeme je isteklo. Vrata su zatvorena.";
+                        clearInterval(tt2);
+                        counter=8;
+                    } else {
+                        counter--;
+                        document.getElementById('odbrojavanje').innerHTML= counter;
+                    }
+                },1000);
+
+                   // cekaj7sekundi();
+                  // document.getElementById("odbrojavanje").innerHTML = '';
+                   setVrataOtkljucanaFalse();
+                   /* while(counter<7)
+                      setInterval(displaySecondes, 1000);
+                      setVrataOtkljucanaFalse();
+                      counter=0;*/
+                  //  setTimeout(()=>{odbrojavanje},1000)
+                    // poruka_sifra_tacna.innerHTML="Vrijeme je isteklo. Vrata su zatvorena.";
+                  }       
+                  else {
+                  
+                 
+                    poruka_sifra_tacna.innerHTML="Vrata su zaključana.";
+
+                    get(child(dbref,"vrata/"+"pogresna"))
+                   .then((snapshot)=>{
+                   
+                    var data=snapshot.val();
+                    console.log("pogresna: ",data);
+                    if(data==true){
+                        poruka_sifra_tacna.innerHTML="Neispravan unos.";
+
+                        
+                     update(ref(db,'vrata'),{ pogresna:false })
+         
+                        
+                    }
+                             
+                    })
+                  }
+
+                 
                 }
                 else{
                     alert("No data found.");
                 }
-            })     
+            })
+
+
+
+           
+         
         }
 
+       
+/*
+       function displaySecondes() {
+       document.getElementById("odbrojavanje").innerHTML = counter++;
+       }
+
+        function cekaj7sekundi(){
+            setTimeout(setVrataOtkljucanaFalse,7000);
+        }
+
+        let brojac=7;
+        function odbrojavanje(){
+           
+            if(brojac>0){
+                odbrojavanje.innerHTML=brojac.toString();
+                brojac--;
+                console.log(brojac);
+            }
+            
+        }
+
+        */
 
         function setVrataOtkljucanaFalse(){
             update(ref(db,'otkljucavanje'),{
@@ -248,6 +297,25 @@
 
         var counter = 8;  //za odbrojavanje sekundi
      
+
+    //var tt=setInterval(function(){startTime()},1000);
+  
+/*
+   function startTime()
+   {
+        if(counter == 0) {
+             document.getElementById('odbrojavanje').innerHTML="";
+             poruka_sifra_tacna.innerHTML="Vrijeme je isteklo. Vrata su zatvorena.";
+             clearInterval(tt);
+             counter=8;
+        } else {
+             counter--;
+             document.getElementById('odbrojavanje').innerHTML= counter;
+        }
+    }
+*/
+
+
         btn_potvrdi_unos_nove_sifre.addEventListener('click', PromijeniSifru);
  
       </script>

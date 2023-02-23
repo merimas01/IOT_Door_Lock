@@ -63,51 +63,52 @@
 </head>
 <body>
     
+
     <div class="sve">
-        <div class="naslov">
-            <h1>Pametno otključavanje vrata</h1>
-        </div>
-
-        <hr>
-
-        <div class="unosSifre">
-            <h3>Unesite šifru</h3>
-            <input id="unos_sifra" type="password">
-            <br>
-            <button id="btn_potvrdi_sifru">POTVRDI UNOS</button>
-        </div>
-
-        <hr>
-
-        <div class="porukaNovaSifra">
-            <h5>Poruka za postavljanje nove šifre:</h5> 
-            <h3 id="poruka_nova_sifra"></h3>
-        </div>
-
-        <hr>
-
-        <div class="footer">
-            <h5>Merima Šarančić | IB200070 | 2023</h5>
-        </div>
+    <div class="naslov">
+        <h1>Pametno otključavanje vrata</h1>
     </div>
 
-    <script type="module">
+    <hr>
+
+    <div class="unosSifre">
+        <h3>Unesite šifru</h3>
+        <input id="unos_sifra" type="password">
+        <br>
+        <button id="btn_potvrdi_sifru">POTVRDI UNOS</button>
+    </div>
+
+    <hr>
+
+    <div class="porukaNovaSifra">
+        <h5>Poruka za postavljanje nove šifre:</h5> 
+        <h3 id="poruka_nova_sifra"></h3>
+    </div>
+
+    <hr>
+
+    <div class="footer">
+        <h5>Merima Šarančić | IB200070 | 2023</h5>
+    </div>
+    </div>
+
+ <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
-    
+      
         // Your web app's Firebase configuration
         const firebaseConfig = {
-        apiKey: "AIzaSyAlL8kJB9eIqMCE1WOeSP03BeB4UlM92G4",
-        authDomain: "smart-door-lock-3ce6d.firebaseapp.com",
-        databaseURL: "https://smart-door-lock-3ce6d-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "smart-door-lock-3ce6d",
-        storageBucket: "smart-door-lock-3ce6d.appspot.com",
-        messagingSenderId: "15889009757",
-        appId: "1:15889009757:web:6c7d06d2c3e5ed33b651b4"
+          apiKey: "AIzaSyAlL8kJB9eIqMCE1WOeSP03BeB4UlM92G4",
+          authDomain: "smart-door-lock-3ce6d.firebaseapp.com",
+          databaseURL: "https://smart-door-lock-3ce6d-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "smart-door-lock-3ce6d",
+          storageBucket: "smart-door-lock-3ce6d.appspot.com",
+          messagingSenderId: "15889009757",
+          appId: "1:15889009757:web:6c7d06d2c3e5ed33b651b4"
         };
-    
+      
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
 
@@ -121,25 +122,38 @@
         var poruka_nova_sifra=document.querySelector("#poruka_nova_sifra");
         var btn_potvrdi_sifru=document.getElementById("btn_potvrdi_sifru");
 
-        function otvoriVrata()
-        {        
+        function otvoriVrata(){
+           /* var database=firebase.database();
+
+            var ref=database.ref('admin/'+'sifra_admin');
+            ref.on('value',function(snapshot){
+                var data=snapshot.val();
+
+                console.log(data);
+            })*/
+
             const dbref=ref(db);
             get(child(dbref,"vrata/"+'sifra_vrata'))
             .then((snapshot)=>{
-                if(snapshot.exists())
-                {
-                var data=snapshot.val();
-                console.log("Sifra za otkljucavanje: ",data);
-                console.log("Unesena sifra: ",unos_sifra.value);
+                if(snapshot.exists()){
+                  var data=snapshot.val();
+                  console.log("Sifra za otkljucavanje: ",data);
+                  console.log("Unesena sifra: ",unos_sifra.value);
 
-                if(data==unos_sifra.value){                   
+                  if(data==unos_sifra.value){
+                   
                     //setuj vrataotlkljucana na true
-                    setVrataOtkljucana();                   
-                    update(ref(db,'vrata'),{ pogresna:false })                         
-                }
-                else{
-                    update(ref(db,'vrata'),{ pogresna:true })
-                }                
+                    setVrataOtkljucana();
+                    
+                    update(ref(db,'vrata'),{ pogresna:false })
+                          
+                  }
+                  else{
+                    update(ref(db,'vrata'),{
+                    pogresna:true
+                   })
+                  }
+                 
                 }
                 else{
                     alert("No data found.");
@@ -151,44 +165,52 @@
             update(ref(db,'otkljucavanje'),{
                 vrata_otkljucana:true
             })
+           /* .then(()=>{
+                alert("Data updated successfully!");
+            })
+            .catch((error)=>{
+                alert("Error: "+error);
+            });*/
         }
 
-        window.onload = function onload_funkcija(){
-        //get sifra postavljena
-        //if sifra_postavljena==true
-        //poruka_nova_sifra.innerHTML=data.toString();
+       window.onload = function onload_funkcija(){
+            //get sifra postavljena
+             //if sifra_postavljena==true
+        // poruka_nova_sifra.innerHTML=data.toString();
 
         const dbref=ref(db);
             get(child(dbref,"promjena_sifre/"+'sifra_promijenjena'))
             .then((snapshot)=>{
-                if(snapshot.exists())
-                {
-                    var data=snapshot.val();
-                    console.log("Sifra promijenjena: ",data);
+                if(snapshot.exists()){
+                  var data=snapshot.val();
+                  console.log("Sifra promijenjena: ",data);
 
-                    if(data==true)
-                    {
-                        poruka_nova_sifra.innerHTML="Nova šifra je uspješno postavljena!";
-                        setTimeout(setPromijeniSifruFalse,7000);
-                        //setPromijeniSifruFalse();
-                    }      
-                    else{
-                        poruka_nova_sifra.innerHTML="Još nema izmjena šifre.";
-                        // const dbref=ref(db);
-                        get(child(dbref,"failure/"+"fail"))
-                        .then((snapshot)=>{
-                            if(snapshot.exists())
-                            {
-                                var data=snapshot.val();
-                                console.log("fail: ",data);
-                                if(data==true)
-                                {
-                                    poruka_nova_sifra.innerHTML="Neispravan unos adminove ili nove šifre";
-                                    update(ref(db,"failure/"),{ fail:false }) 
-                                }
-                            }           
-                        })  
-                    } 
+                  if(data==true)
+                  {
+                    poruka_nova_sifra.innerHTML="Nova šifra je uspješno postavljena!";
+                    setTimeout(setPromijeniSifruFalse,7000);
+                    //setPromijeniSifruFalse();
+                  }      
+                  else{
+
+                    poruka_nova_sifra.innerHTML="Još nema izmjena šifre.";
+                   // const dbref=ref(db);
+                    get(child(dbref,"failure/"+"fail"))
+                    .then((snapshot)=>{
+                    if(snapshot.exists()){
+                    var data=snapshot.val();
+                    console.log("fail: ",data);
+                      if(data==true)
+                      {
+                      poruka_nova_sifra.innerHTML="Neispravan unos adminove ili nove šifre";
+                      update(ref(db,"failure/"),{
+                      fail:false
+                     }) 
+                    }
+                     }           
+                    })  
+
+                  } 
                 }
                 else{
                     alert("No data found.");
@@ -201,27 +223,27 @@
                 sifra_promijenjena:false
                 })
         }
-    
+       
         /*
         function jel_fail(){
             const dbref=ref(db);
             get(child(dbref,"failure/"+'fail'))
             .then((snapshot)=>{
                 if(snapshot.exists()){
-                var data=snapshot.val();
-                if(data==true){
+                  var data=snapshot.val();
+                 if(data==true){
                     return true;
-                }
-                return false;
+                 }
+                 return false;
                 }           
             })
         }
         */
 
         btn_potvrdi_sifru.addEventListener('click',otvoriVrata);
-        
+       
 
-        </script>
+      </script>
 
 
 </body>
