@@ -146,7 +146,6 @@
         }
 
         function PromijeniSifru(){
-
             if(unos_admin_pass.value==adminsifra && unos_nove_sifre.value!="" 
             && unos_nove_sifre.value.length==4 && containsOnlyNumbers(unos_nove_sifre.value) )
             {
@@ -165,13 +164,14 @@
                 fail:false
                 })
             }
-            else 
+            else
             {
                 update(ref(db,"failure/"),{
                 fail:true
                 })         
             }
         }
+
 
 
         let adminsifra="";
@@ -188,7 +188,17 @@
             })
         }
 
-        window.onload = function onload_funkcija(){
+
+        //kada se uradi refresh, pozove se ova funkcija
+        window.onload=function(){
+            poruka_sifra_tacna.innerHTML="Vrata su zaključana.";
+        }
+
+        //onload_funckija se poziva svako 10 sekundi (kako bi vidjeli posljednje promjene iz firebase)
+        var reloadingInterval = setInterval(onload_funkcija, 10000);
+       
+     
+        function onload_funkcija(){
         const dbref=ref(db);
 
         AdminSifraIsta();
@@ -200,11 +210,11 @@
                   var data=snapshot.val();
                   console.log("Vrata otkljucana: ",data);
 
-                    if(data==true)
-                    {
+                    if(data==true){
                         poruka_sifra_tacna.innerHTML="Vrata su otključana. Za 7 sekundi vrata će se zatvoriti.";
-            
-                        var tt2=setInterval(()=>{
+                        //funkcija za odbrojavanje 7 sekundi: setInterval
+                        var tt2=setInterval(()=>
+                        {
                             if(counter == 0) {
                                 document.getElementById('odbrojavanje').innerHTML="";
                                 poruka_sifra_tacna.innerHTML="Vrijeme je isteklo. Vrata su zatvorena.";
@@ -217,8 +227,7 @@
                         },1000);
                         setVrataOtkljucanaFalse();
                     }       
-                    else 
-                    {               
+                    else{               
                         poruka_sifra_tacna.innerHTML="Vrata su zaključana.";
                         get(child(dbref,"vrata/"+"pogresna"))
                         .then((snapshot)=>{                

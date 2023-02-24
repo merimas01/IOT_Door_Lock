@@ -128,18 +128,18 @@
             .then((snapshot)=>{
                 if(snapshot.exists())
                 {
-                var data=snapshot.val();
-                console.log("Sifra za otkljucavanje: ",data);
-                console.log("Unesena sifra: ",unos_sifra.value);
+                    var data=snapshot.val();
+                    console.log("Sifra za otkljucavanje: ",data);
+                    console.log("Unesena sifra: ",unos_sifra.value);
 
-                if(data==unos_sifra.value){                   
-                    //setuj vrataotlkljucana na true
-                    setVrataOtkljucana();                   
-                    update(ref(db,'vrata'),{ pogresna:false })                         
-                }
-                else{
-                    update(ref(db,'vrata'),{ pogresna:true })
-                }                
+                    if(data==unos_sifra.value){                   
+                        //setuj vrataotlkljucana na true
+                        setVrataOtkljucana();                   
+                        update(ref(db,'vrata'),{ pogresna:false })                         
+                    }
+                    else{
+                        update(ref(db,'vrata'),{ pogresna:true })
+                    }                
                 }
                 else{
                     alert("No data found.");
@@ -153,7 +153,17 @@
             })
         }
 
-        window.onload = function onload_funkcija(){
+         
+        //onload_funckija se poziva svako 3 sekunde (kako bi vidjeli posljednje promjene iz firebase)
+        var reloadingInterval = setInterval(onload_funkcija, 3000);
+
+        //kada se uradi refresh, pozove se ova funkcija
+        window.onload=function(){
+            poruka_nova_sifra.innerHTML="Još nema izmjena šifre.";
+        }
+
+       
+        function onload_funkcija(){
         //get sifra postavljena
         //if sifra_postavljena==true
         //poruka_nova_sifra.innerHTML=data.toString();
