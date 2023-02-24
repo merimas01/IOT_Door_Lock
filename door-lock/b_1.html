@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1</title>
+</head>
+<body>
+
+    <button id="btn_blink">Klikni me da blinkam!</button>
+    
+    <script type="module">
+         // Import the functions you need from the SDKs you need
+         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+    
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+        apiKey: "AIzaSyAlL8kJB9eIqMCE1WOeSP03BeB4UlM92G4",
+        authDomain: "smart-door-lock-3ce6d.firebaseapp.com",
+        databaseURL: "https://smart-door-lock-3ce6d-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "smart-door-lock-3ce6d",
+        storageBucket: "smart-door-lock-3ce6d.appspot.com",
+        messagingSenderId: "15889009757",
+        appId: "1:15889009757:web:6c7d06d2c3e5ed33b651b4"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        import {getDatabase, set, get, update, remove, ref, child} 
+        from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+
+        const db = getDatabase();
+
+        var btn_blink=document.getElementById("btn_blink");
+
+        function setujKliknuoBlinkTrue(){
+            update(ref(db,'blinkanje'),{
+                kliknuo_blink:true
+            })
+        }
+
+        btn_blink.addEventListener('click',setujKliknuoBlinkTrue);
+
+    </script>
+
+
+</body>
+</html>

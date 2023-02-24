@@ -58,6 +58,17 @@
             margin-bottom:3%;
         }
 
+        /*
+        .sredina{
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .porukaSifraTacna, .unosNoveSifre{
+            width:100%;
+        }*/
+
     </style>
 
 </head>
@@ -79,8 +90,6 @@
         </div>
 
         <hr>
-
-        <button id="btn_blink">KLIKNI ZA BLINKANJE</button>
 
         <div class="unosNoveSifre" id="unosNove">
             <h5>Unesite adminovu lozinku: </h5>
@@ -131,10 +140,6 @@
         var unos_admin_pass=document.getElementById("unos_admin_pass");
         var unos_nove_sifre=document.getElementById("unos_nove_sifre");
         var btn_potvrdi_unos_nove_sifre=document.getElementById("btn_potvrdi_unos_nove_sifre");
-        var btn_blink=document.getElementById("btn_blink");
-
-
-
 
         function containsOnlyNumbers(str) {
          return /^[0-9]+$/.test(str);
@@ -252,22 +257,7 @@
 
         var counter = 8;  //za odbrojavanje sekundi
      
-
-
-
-        let blinkaj=false;
-        function setBlinkTrue(){
-            update(ref(db,'blinkanje'),{
-                kliknuo_blink:true
-            })
-        }
-
-
         btn_potvrdi_unos_nove_sifre.addEventListener('click', PromijeniSifru);
-        btn_blink.addEventListener('click',setBlinkTrue);
-        
-
-
  
       </script>
 
