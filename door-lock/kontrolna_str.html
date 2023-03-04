@@ -59,12 +59,6 @@
             margin-bottom:3%;
         }
 
-        .blinkanje{
-            width: 50px;
-            height: 50px;
-            border: 2px black solid;
-        } 
-
     </style>
 
 </head>
@@ -85,16 +79,13 @@
         </div>
 
         <hr>
+        <h3 id="ispisi"></h3>
+        <hr>
 
         <div class="porukaNovaSifra">
             <h5>Poruka za postavljanje nove šifre:</h5> 
             <h3 id="poruka_nova_sifra"></h3>
         </div>
-
-
-          <h3 class="blinkanje" id="blink">  
-          </h3>
-        
 
         <hr>
 
@@ -132,6 +123,7 @@
         var unos_sifra=document.querySelector("#unos_sifra");
         var poruka_nova_sifra=document.querySelector("#poruka_nova_sifra");
         var btn_potvrdi_sifru=document.getElementById("btn_potvrdi_sifru");
+        var ispisi=document.getElementById('ispisi');
 
         function otvoriVrata()
         {        
@@ -166,13 +158,13 @@
         }
 
          
-        //onload_funckija se poziva svako 3 sekunde (kako bi vidjeli posljednje promjene iz firebase)
-        var reloadingInterval = setInterval(onload_funkcija, 10000);
+        //onload_funckija se poziva svako 5 sekundi (kako bi vidjeli posljednje promjene iz firebase)
+        var reloadingInterval = setInterval(onload_funkcija, 5000);
 
         //kada se uradi refresh, pozove se ova funkcija
         window.onload=function(){
-            poruka_nova_sifra.innerHTML="Još nema izmjena šifre.";
-            getBlink();
+            get_ispisi();
+            poruka_nova_sifra.innerHTML="Još nema izmjena šifre.";         
         }
 
        
@@ -181,7 +173,7 @@
         //if sifra_postavljena==true
         //poruka_nova_sifra.innerHTML=data.toString();
 
-        getBlink();
+        get_ispisi();
 
         const dbref=ref(db);
             get(child(dbref,"promjena_sifre/"+'sifra_promijenjena'))
@@ -244,58 +236,29 @@
         */
 
 
-
-        function getBlink(){
-            const dbref=ref(db);
-            get(child(dbref,"blinkanje/"+'kliknuo_blink'))
-            .then((snapshot)=>{
-                if(snapshot.exists()){
-                var kliknuo_blink=snapshot.val();
-                  if(kliknuo_blink==true){
-                    console.log("kliknuo blink: ", kliknuo_blink);
-                
-                    var tt2=setInterval(()=>
-                        {
-                            if(counter == 0) {
-                                clearInterval(tt2);
-                                document.getElementById('blink').style.border="black";
-                                document.getElementById('blink').style.width='0px';
-                                document.getElementById('blink').style.height='0px';
-                                counter=7;                          
-                            } 
-                            else if(counter%2==0 && counter!=0){
-                                document.getElementById('blink').style.backgroundColor="red";                     
-                                document.getElementById('blink').style.border="red";
-                                document.getElementById('blink').style.width='50px';
-                                document.getElementById('blink').style.height='50px';
-                                counter--;
-                            }
-                            else {
-                                counter--;
-                                document.getElementById('blink').style.backgroundColor="aquamarine";
-                                document.getElementById('blink').style.border="aquamarine";
-                                document.getElementById('blink').style.width='50px';
-                                document.getElementById('blink').style.height='50px';
-                            }
-                        },300);
-
-                     setKliknuoBlinkFalse();
-
-                     console.log("kliknuo blink: ", kliknuo_blink);
-                  }
-                }           
+        function setKliknuoIspisiFalse(){
+            update(ref(db,'brojevi'),{
+                kliknuo_ispisi:false
             })
         }
 
-        let counter=7;
-
-        function setKliknuoBlinkFalse(){
-            update(ref(db,"blinkanje/"),{
-                    kliknuo_blink:false
-                    })
+        function get_ispisi(){
+            const dbref=ref(db);
+            get(child(dbref,"brojevi/"+'kliknuo_ispisi'))
+            .then((snapshot)=>{
+                if(snapshot.exists()){
+                var data=snapshot.val();
+                console.log("kliknuo ispisi: ",data);
+                if(data==true){
+                    document.getElementById('ispisi').innerHTML="1 2 3 4 5 6 7 8 9 10";
+                }
+                else {
+                    ispisi.innerHTML="";
+                }
+                }
+            })
+           // setKliknuoIspisiFalse();
         }
-
-        
 
         btn_potvrdi_sifru.addEventListener('click',otvoriVrata);
         

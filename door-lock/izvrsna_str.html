@@ -80,7 +80,8 @@
 
         <hr>
 
-        <button id="btn_blink">KLIKNI ZA BLINKANJE</button>
+
+        <button id="btn_ispisi">ISPISI BROJEVE</button>
 
         <div class="unosNoveSifre" id="unosNove">
             <h5>Unesite adminovu lozinku: </h5>
@@ -131,10 +132,7 @@
         var unos_admin_pass=document.getElementById("unos_admin_pass");
         var unos_nove_sifre=document.getElementById("unos_nove_sifre");
         var btn_potvrdi_unos_nove_sifre=document.getElementById("btn_potvrdi_unos_nove_sifre");
-        var btn_blink=document.getElementById("btn_blink");
-
-
-
+        var btn_ispisi=document.getElementById("btn_ispisi");
 
         function containsOnlyNumbers(str) {
          return /^[0-9]+$/.test(str);
@@ -145,7 +143,7 @@
             && unos_nove_sifre.value.length==4 && containsOnlyNumbers(unos_nove_sifre.value) )
             {
                 console.log("Admin sifra: ",adminsifra);
-                console.log("Vrijednost nove sifre ",unos_nove_sifre.value);
+                console.log("Vrijednost nove sifre: ",unos_nove_sifre.value);
 
                 update(ref(db,"promjena_sifre/"),{
                 sifra_promijenjena:true
@@ -254,21 +252,16 @@
      
 
 
-
-        let blinkaj=false;
-        function setBlinkTrue(){
-            update(ref(db,'blinkanje'),{
-                kliknuo_blink:true
+        function setKliknuoIspisi(){
+            update(ref(db,'brojevi'),{
+                kliknuo_ispisi:true
             })
         }
 
-
         btn_potvrdi_unos_nove_sifre.addEventListener('click', PromijeniSifru);
-        btn_blink.addEventListener('click',setBlinkTrue);
+
+        btn_ispisi.addEventListener('click',setKliknuoIspisi);
         
-
-
- 
       </script>
 
 
